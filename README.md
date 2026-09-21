@@ -11,10 +11,10 @@ The token is a Cloudflare secret; never commit it. A public repository needs no 
 1. Generate a complete document matching schemas/research.schema.json or schemas/results.schema.json. Unknown fields are rejected.
 2. Set generated_at to the real UTC generation time, model_version to the actual research methodology version, season and week to the NFL season/week (week 1–22, postseason included).
 3. Run `node scripts/hash.mjs path/to/file.json` to set content_hash. Hash is lowercase SHA-256 over UTF-8 canonical JSON of the entire document excluding content_hash: recursively sort object keys, preserve array order, no whitespace, JavaScript JSON.stringify scalar encoding. Do not invent a hash.
-4. Commit identical copies to latest/{kind}.json and week/2026-W02/{kind}.json. Prefer one commit for related updates. The importer reads both latest files from one resolved branch commit.
+4. Commit identical copies to latest/{kind}.json and week/{season}-W{week}/{kind}.json. Prefer one commit for related updates. The importer reads both latest files from one resolved branch commit.
 5. Check /api/import/status after the hourly scan or an authorized manual run.
 
-Current latest files are empty connection tests, not research, forecasts, picks, or results. They do not publish a weekly brief. Replace them with real verified research; leave the empty results file until actual outcomes are available.
+The current latest research file is a live handoff, not a demo fixture. Keep results empty until verified outcomes exist; never fabricate results or market lines.
 
 ## Research
 
@@ -38,4 +38,4 @@ Win/loss/push require actual + settled_at and are checked mathematically against
 
 One metadata table: signal_github_handoff. Existing weekly_research receives the research projection; raw_snapshots stores immutable github_research/github_results versions; stat_snapshots with entity_type=github_result stores the current weekly result rows. sync_state records status and a short import lease. Market tables are untouched. All changed documents commit in one D1 batch transaction; invalid or frozen documents leave prior data intact. rows_written counts document archive rows plus research/result content rows, excluding bookkeeping. The original SIGNAL learning UI does not yet read github_result rows; this integration persists the handoff without redesigning that UI.
 
-Worker configuration: GITHUB_REPOSITORY_URL and GITHUB_BRANCH. Cron: hourly at minute 0, UTC. No OpenAI API calls.
+Worker configuration: GITHUB_REPOSITORY_URL and GITHUB_BRANCH. Importer cron: hourly at minute 0 UTC (`0 * * * *`). This is separate from the main SIGNAL market Worker, whose scheduler ticks every two minutes and uses D1 cadence gating. No OpenAI API calls.
