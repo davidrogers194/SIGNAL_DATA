@@ -32,7 +32,7 @@ export async function runImport(env){
    const payload=JSON.stringify(p),weekKey=p.season+'-W'+String(p.week).padStart(2,'0');let rows=1;
    writes.push(prepare(env,'INSERT INTO raw_snapshots(kind,source,source_key,captured_at,payload_json) VALUES (?,?,?,?,?)','github_'+p.kind,env.GITHUB_REPOSITORY_URL,p.content_hash,now,payload));
    if(p.kind==='research'&&p.payload.games.length){
-    const projection={...p.payload,weekKey,publishedAt:p.generated_at,source:'GitHub research · '+p.model_version,content_hash:p.content_hash,frozen:p.frozen};
+    const projection={...p.payload,weekKey,publishedAt:p.generated_at,source:'GitHub research · '+p.model_version,content_hash:p.content_hash,frozen:p.frozen,games:p.payload.games.map(game=>{const picks=p.payload.qualifiedProps.filter(prop=>prop.eventId===game.eventId&&prop.grade!=='Pass').sort((a,b)=>b.score-a.score);const best=picks[0];return {...game,grade:best?.grade??'Research',score:best?.score??null,beneficiaries:[...new Set(picks.map(x=>x.player))],propTypes:[...new Set(picks.map(x=>x.marketKey.replace(/^player_/,'').replaceAll('_',' ')))],sources:game.sources.map(source=>({label:source.title,url:source.url,published_at:source.published_at}))};})};
     writes.push(prepare(env,"INSERT INTO weekly_research(week_key,title,dek,published_at,source,payload_json) VALUES (?,?,?,?,?,?) ON CONFLICT(week_key) DO UPDATE SET title=excluded.title,dek=excluded.dek,published_at=excluded.published_at,source=excluded.source,payload_json=excluded.payload_json WHERE excluded.published_at>weekly_research.published_at",weekKey,p.payload.title,p.payload.dek,p.generated_at,projection.source,JSON.stringify(projection)));rows++;
    }
    if(p.kind==='results'){
