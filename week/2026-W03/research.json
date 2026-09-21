@@ -1,0 +1,109 @@
+{
+  "schema_version": "1.0",
+  "kind": "research",
+  "season": 2026,
+  "week": 3,
+  "model_version": "SIGNAL-2.1-Monday-pre-market",
+  "generated_at": "2026-09-21T03:08:00Z",
+  "content_hash": "9bf142aeb1baaaa81327cbb8a80f8d6c86861499b66d1d55650032752456233c",
+  "frozen": false,
+  "payload": {
+    "title": "Week 3 Monday Gameflow Journal — Pre-Market Priority Labs",
+    "dek": "Monday pre-market Week 3 research built from the Week 2 autopsy and current personnel news. Priority labs are Atlanta-Green Bay, Los Angeles-Buffalo, Arizona-San Francisco and Philadelphia-Chicago. No DFS lines are graded yet. Research remains unfrozen because quarterback, skill-position and offensive-line statuses can materially change these gameflow branches before kickoff.",
+    "games": [
+      {
+        "eventId": "ATL-GB-2026-09-24",
+        "matchup": "Atlanta Falcons @ Green Bay Packers",
+        "headline": "Quarterback uncertainty in Atlanta collides with a short-week Green Bay team carrying fresh receiver and tackle injuries.",
+        "thesis": "Atlanta's 34-3 loss to Carolina exposed how fragile the offense is when its quarterback play creates negative possessions: Cooper Rush turned the ball over on each of the first two drives and rookie Jack Strand later threw a pick-six on his first attempt. Michael Penix Jr. is now a legitimate Week 3 return branch, so the Falcons cannot be modeled as the same offense until his status and expected mobility are known. Green Bay escaped New York 20-17 in overtime but needed a fourth-quarter comeback and committed 14 penalties for 133 yards. The early football-only lean is that Green Bay has the more stable quarterback/offensive structure, while Atlanta's best path is to make Bijan Robinson the possession stabilizer and avoid obvious passing downs.",
+        "defensiveWeakness": "Green Bay's front and coverage depth are not clean entering the short week: Jayden Reed left Week 2 with a neck injury, right tackle Zach Bako-Bewele was carted off with a knee injury, and the Packers already entered Week 2 with multiple front-seven and secondary players on the injury report. Atlanta's defense also gave Carolina clean, distributed offense after the Falcons' turnovers repeatedly shortened the field. The matchup cannot be reduced to the Week 2 final score because Atlanta's offensive turnovers materially distorted defensive game state.",
+        "offensiveResponse": "If Penix is cleared, Atlanta should still protect him with early-down rushing, motion and defined reads rather than immediately expanding into a high-volume dropback game on a four-day turnaround. Bijan Robinson remains the highest-confidence workload anchor after reaching 4,000 career rushing yards and posting 72 yards despite the blowout. Green Bay should lean on Jordan Love's controlled passing game and use tempo/motion to force Atlanta to declare coverage, but the Packers' committee backfield and possible receiver/tackle absences lower confidence in assigning volume to any one secondary player.",
+        "personnelContext": "Michael Penix Jr. could make his 2026 debut Thursday after missing the first two games with a knee injury; Atlanta's Week 2 starter Cooper Rush was benched during the 34-3 loss. Tua Tagovailoa was inactive in Week 2 with an oblique injury. Green Bay lost WR Jayden Reed to a neck injury and RT Zach Bako-Bewele to a knee injury in Week 2. Those statuses are material and must be rechecked before any prop simulation.",
+        "gameflow": "Base branch: Green Bay plays from a more stable offensive platform and tries to make Atlanta sustain long drives. Atlanta counters by feeding Robinson and limiting high-variance quarterback exposure. Penix-active branch: the Falcons gain more vertical and movement-based offense, but early-game efficiency should be discounted until his post-ACL workload and movement are observed. Penix-out branch: Green Bay's chance to create short fields rises sharply if Atlanta returns to a Rush/Strand passing structure. A close first half keeps Robinson volume resilient; a multi-score Packers lead would force Atlanta away from its most reliable offensive lever.",
+        "breaker": "Do not freeze until Atlanta names its Week 3 starting quarterback and Penix's practice participation is known. Also rerun if Reed or Bako-Bewele receives a multi-week diagnosis, if Chris Lindstrom/A.J. Terrell suffer setbacks, or if Green Bay's offensive line changes materially on the short week.",
+        "sources": [
+          {
+            "title": "ESPN — NFL Week 2: Takeaways, questions, fantasy spin for Sunday games",
+            "url": "https://www.espn.com/nfl/story/_/id/49951393/week-2-sunday-games-takeaways-questions-2026",
+            "published_at": "2026-09-20T23:55:00Z"
+          },
+          {
+            "title": "Atlanta Falcons — Week 2 injury report: Michael Penix Jr. ruled out vs. Panthers",
+            "url": "https://www.atlantafalcons.com/news/falcons-injury-report-michael-penix-jr-ruled-out-vs-panthers",
+            "published_at": "2026-09-18T17:17:00Z"
+          },
+          {
+            "title": "NFL.com — Notable injuries from Sunday's Week 2 games",
+            "url": "https://www.nfl.com/news/notable-injuries-news-from-sunday-s-week-2-games",
+            "published_at": "2026-09-20T17:30:00Z"
+          }
+        ]
+      },
+      {
+        "eventId": "LAC-BUF-2026-09-27",
+        "matchup": "Los Angeles Chargers @ Buffalo Bills",
+        "headline": "Buffalo's balanced, explosive offense meets a Chargers attack that has not yet found a functional downfield passing identity.",
+        "thesis": "The Chargers fell to 0-2 after a 26-14 home loss to Las Vegas, and the central repeatable signal was offensive disconnection rather than a single turnover swing: Justin Herbert finished with 192 passing yards, did not complete a pass traveling more than 20 air yards, and operated under frequent pressure. By contrast, Buffalo opened its new stadium by scoring 41 on Detroit, with Josh Allen producing four first-half touchdowns and James Cook clearing 100 rushing yards before halftime. The strongest football-only mismatch is Buffalo's ability to stress both box count and coverage depth while Los Angeles is still searching for reliable protection and explosive pass answers.",
+        "defensiveWeakness": "Los Angeles' protection has been unstable enough to suppress the vertical game, with LT Joe Alt committing multiple penalties in Week 2 while Herbert faced constant pressure. Buffalo's vulnerability is less obvious from Week 2 because Detroit still scored 31 and moved the ball through its own elite skill group; the Bills should not be treated as an impenetrable defense. The matchup is therefore driven more by Buffalo's offensive multiplicity and Los Angeles' offensive execution problems than by assuming a dominant Bills defense.",
+        "offensiveResponse": "Los Angeles has one emerging stabilizer: Omarion Hampton handled 23 carries for 92 yards and a touchdown, making his role more bankable than the preseason expectation of a three-back split. A sensible Chargers response is to use Hampton to keep Allen off the field and create play-action rather than asking Herbert to win a pure dropback game. Buffalo can answer personnel packages without becoming one-dimensional because Allen and Cook both threaten the run while the passing game can attack vertically and off schedule.",
+        "personnelContext": "Buffalo WR DJ Moore was reported uncertain for Week 3 after a shoulder issue, so receiver distribution must remain conditional even though Buffalo's offensive structure remains strong. Los Angeles entered Week 2 with Ladd McConkey active, but the wider passing game remained out of sync. Hampton's 23-carry Week 2 role is the clearest workload change to carry forward.",
+        "gameflow": "Base branch: Buffalo forces Los Angeles to defend the entire field and builds enough early scoring pressure that Herbert's dropback rate rises. The Chargers' best counter-branch is a slow, run-heavy first half centered on Hampton with long possessions and fewer total drives. If Buffalo leads by 10+ points, Chargers rushing volume becomes fragile and Herbert pressure/dropback exposure becomes the dominant game-state variable. If Los Angeles stays within one score into the second half, Hampton volume and short-area receiving become more resilient than deep passing production.",
+        "breaker": "Rerun if DJ Moore is ruled out or fully cleared, if the Chargers change offensive-line personnel, or if Week 3 practice reveals a new Herbert/McConkey limitation. Do not convert Buffalo's Week 2 score into an automatic defensive-overpower assumption; the simulation should separately model Buffalo offense strength and Bills defensive variance.",
+        "sources": [
+          {
+            "title": "ESPN — NFL Week 2: Takeaways, questions, fantasy spin for Sunday games",
+            "url": "https://www.espn.com/nfl/story/_/id/49951393/week-2-sunday-games-takeaways-questions-2026",
+            "published_at": "2026-09-20T23:55:00Z"
+          },
+          {
+            "title": "NFL.com — Lions-Bills TNF: What We Learned from Buffalo's 41-31 win",
+            "url": "https://www.nfl.com/news/lions-bills-on-thursday-night-football-what-we-learned-from-buffalo-s-41-31-win",
+            "published_at": "2026-09-18T04:07:00Z"
+          }
+        ]
+      },
+      {
+        "eventId": "ARI-SF-2026-09-27",
+        "matchup": "Arizona Cardinals @ San Francisco 49ers",
+        "headline": "Arizona's offense just collapsed to 127 yards, but San Francisco's run defense and receiver health create meaningful counter-branches.",
+        "thesis": "Arizona's 31-7 loss to Seattle produced the sharpest offensive warning of Week 2 among the priority games: 127 total yards and only 95 passing yards from Jacoby Brissett. Marvin Harrison Jr. has run 58 routes but has seen only four targets through two games, while Trey McBride has become the clearer target funnel. San Francisco, meanwhile, scored touchdowns on its first five drives in a 35-13 win over Miami and has shown that its core offense can function through changing skill personnel. The mismatch favors San Francisco's offensive structure, but this game is not clean enough to freeze because the 49ers' receiver room is deteriorating and their run defense remains exploitable.",
+        "defensiveWeakness": "San Francisco's biggest repeatable weakness is run defense and early-down displacement. Miami controlled the ball for much of the first half and generated 60 rushing yards before first contact, limiting San Francisco to only two first-half possessions. Arizona's defense also weakened substantially against Seattle's run game after halftime, allowing 109 second-half rushing yards after permitting only 43 before halftime.",
+        "offensiveResponse": "Arizona's best response is to avoid asking Brissett to win through high-volume static dropbacks. A run-first, possession-oriented plan with McBride as the high-confidence middle-field target can attack San Francisco's softer areas and shorten the game. San Francisco should continue using motion, play-action and its tight-end/fullback structure to manufacture efficient throws for Brock Purdy, especially if wide receiver availability remains thin. The 49ers should not assume they can simply replace injured receiver volume one-for-one.",
+        "personnelContext": "San Francisco WR Demarcus Robinson left Week 2 with a right ankle injury later described as a high ankle sprain. Ricky Pearsall, De'Zhaun Stribling and Christian Kirk were already part of an injured receiver group, while Mike Evans dealt with a late hip issue but could have returned if the game were closer. Arizona's offensive concern is primarily role/usage rather than a newly reported Week 2 injury: Harrison's target participation is extremely low relative to route volume.",
+        "gameflow": "Base branch: San Francisco controls efficiency and asks Arizona to prove it can sustain drives. Arizona's upset/competitive branch is built around rushing efficiency, clock control and McBride targets, specifically attacking the same possession pattern Miami used to suppress first-half San Francisco drives. If the 49ers lead by multiple scores, Brissett volume rises into a low-efficiency profile and Arizona's offense becomes more fragile. If Arizona runs successfully early, San Francisco's overall play volume and individual skill-player ceilings compress.",
+        "breaker": "Rerun after the 49ers clarify Robinson and Evans, and quarantine individual 49ers receiving props until the target tree is stable. Also rerun if Arizona changes quarterback or meaningfully changes Harrison's designed-target role in practice comments. A major 49ers defensive-front absence would strengthen the Arizona possession branch.",
+        "sources": [
+          {
+            "title": "ESPN — NFL Week 2: Takeaways, questions, fantasy spin for Sunday games",
+            "url": "https://www.espn.com/nfl/story/_/id/49951393/week-2-sunday-games-takeaways-questions-2026",
+            "published_at": "2026-09-20T23:55:00Z"
+          }
+        ]
+      },
+      {
+        "eventId": "PHI-CHI-2026-09-28",
+        "matchup": "Philadelphia Eagles @ Chicago Bears",
+        "headline": "Chicago's quarterback status is the gate; Philadelphia's own protection and skill-player health prevent this from being a simple one-sided projection.",
+        "thesis": "Chicago fell 9-3 to Minnesota and lost Caleb Williams to a right hamstring injury in the fourth quarter. The offense had already struggled before the injury, particularly against Brian Flores' heavy blitzing, and produced no points after Tyson Bagent entered. Philadelphia is 2-0 but its Week 2 win over Tennessee was not clean: the offensive line leaked pressure for a second straight week, Jalen Hurts threw two interceptions, and Saquon Barkley plus Dallas Goedert missed substantial action with injuries. The matchup can become a strong Philadelphia leverage spot if Williams is limited or out, but the Eagles are not yet stable enough to freeze until their own offensive health improves.",
+        "defensiveWeakness": "Chicago's protection and pressure answers are the immediate concern. Minnesota blitzed Williams heavily and forced a short/checkdown-oriented passing profile; Chicago's line also committed damaging penalties and assignment errors. Philadelphia's concern is its own pass protection plus defensive inconsistency against a Tennessee offense that entered Week 2 near the bottom of the league in yardage. This makes the matchup sensitive to quarterback health rather than a blanket assumption that Philadelphia controls every phase.",
+        "offensiveResponse": "If Williams plays and can move normally, Chicago should lean on its ground game and use designed movement/quick throws to prevent Philadelphia from dictating obvious pressure downs. If Bagent starts, Chicago's passing tree should be treated as compressed until demonstrated otherwise. Philadelphia's most stable Week 2 receiving role was DeVonta Smith, who commanded a 38% target share; however, Barkley and Goedert health can change how defenses allocate resources and therefore change Smith's target quality. Hurts' rushing remains part of the red-zone structure but should not be modeled independently of offensive-line health.",
+        "personnelContext": "Williams left Week 2 with a right hamstring injury; his Week 3 practice participation is the primary gate. Barkley sustained a stinger and Goedert had a knee issue during Philadelphia's Week 2 win. Philadelphia also entered Week 2 without Jonathan Greenard and with Andrew Mukuba questionable. Those statuses should be rechecked before any player-level freeze.",
+        "gameflow": "Williams-active branch: Chicago can sustain more designed movement and quarterback-run stress, keeping Philadelphia from selling out against the run. Williams-limited/out branch: Philadelphia's defensive pressure probability rises and Chicago becomes more dependent on early-down rushing and short throws. A Philadelphia lead of 10+ points would be especially damaging to a Bagent-led script because it forces more known passing downs. A close game preserves Chicago rushing volume and Philadelphia's balanced offense, while increasing the value of stable target-share roles rather than long-play props.",
+        "breaker": "Do not freeze until Williams' hamstring status is known and Philadelphia updates Barkley/Goedert. Rerun for any Eagles offensive-line absence. If Williams is active but limited, treat mobility as a separate state rather than binary active/inactive.",
+        "sources": [
+          {
+            "title": "ESPN — NFL Week 2: Takeaways, questions, fantasy spin for Sunday games",
+            "url": "https://www.espn.com/nfl/story/_/id/49951393/week-2-sunday-games-takeaways-questions-2026",
+            "published_at": "2026-09-20T23:55:00Z"
+          },
+          {
+            "title": "NFL.com — Notable injuries from Sunday's Week 2 games",
+            "url": "https://www.nfl.com/news/notable-injuries-news-from-sunday-s-week-2-games",
+            "published_at": "2026-09-20T17:30:00Z"
+          }
+        ]
+      }
+    ],
+    "qualifiedProps": []
+  }
+}
