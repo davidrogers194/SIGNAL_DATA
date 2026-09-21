@@ -10,7 +10,7 @@ export function expectedResearchSlot(now = new Date()) {
 }
 export async function verifyPipeline(env,readers){
  const now=new Date(),stages={},conditions={};let research=null,commit=null;
- const check=(name,ok,actual,expected,last=null,status=null)=>{stages[name]={status:status||(ok?'PASS':'FAIL'),expected,actual,last_success_at:ok?now.toISOString():last};return !!ok};
+ const check=(name,ok,actual,expected,last=null,status=null)=>{stages[name]={status:status||(ok?'PASS':'FAIL'),expected,actual,last_success_at:ok?(last??now.toISOString()):last};return !!ok};
  const fetchSite=async path=>{const url=new URL(path,env.SIGNAL_SITE_URL);if(url.protocol!=='https:')throw Error('SIGNAL_SITE_URL must use HTTPS');const r=await (env.SIGNAL_SITE?env.SIGNAL_SITE.fetch.bind(env.SIGNAL_SITE):fetch)(url,{headers:{'User-Agent':'SIGNAL-Pipeline-Verifier','Cache-Control':'no-cache'},signal:AbortSignal.timeout(15000)});if(!r.ok)throw Error(path+': HTTP '+r.status);return r;};
  try{
   commit=await readers.github(env,'/commits/'+encodeURIComponent(env.GITHUB_BRANCH||'main'));
@@ -19,6 +19,7 @@ export async function verifyPipeline(env,readers){
   const archived=JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(archive.content.replace(/\s/g,'')),c=>c.charCodeAt(0))));
   const {validate}=await import('./schema.mjs');await validate(archived,'research');
   conditions.github_current=check('GitHub handoff',archived.content_hash===research.content_hash,research.content_hash,'Valid latest and matching week archive');
+  try{const file=await readers.github(env,'/contents/latest/research-audit.json?ref='+commit.sha);const audit=JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(file.content.replace(/\s/g,'')),c=>c.charCodeAt(0))));const valid=audit.research_content_hash===research.content_hash&&['PASS','FAIL'].includes(audit.status)&&Array.isArray(audit.findings)&&Array.isArray(audit.sources_checked)&&audit.sources_checked.length>0&&Number.isFinite(Date.parse(audit.reviewed_at))&&Date.parse(audit.reviewed_at)<=now.getTime()+300000;check('Research content review',valid&&audit.status==='PASS',valid?audit.findings:'Missing or mismatched content review','Matching source-backed substantive research review; schema validation alone is insufficient',valid?audit.reviewed_at:null);}catch(e){check('Research content review',false,e.message,'Matching substantive research review in latest/research-audit.json');}
   const slot=expectedResearchSlot(now),due=Date.parse(slot)+60*60*1000;
   check('Research generation',Date.parse(research.generated_at)>=Date.parse(slot),research.generated_at,`Research generated after ${slot}; one-hour delivery grace`,research.generated_at,Date.parse(research.generated_at)<Date.parse(slot)?(now.getTime()<due?'NOT EXPECTED':'STALE'):null);
  }catch(e){conditions.github_current=check('GitHub handoff',false,e.message,'Readable valid research and archive');check('Research generation',false,'Cannot validate latest research','Current scheduled research');}
@@ -42,7 +43,7 @@ export async function verifyPipeline(env,readers){
  for(const [name,path,key]of [['Games','/api/data/games','games'],['Players','/api/data/players','players'],['Prop Board','/api/data/prop-board?limit=5000','cards']]){
   try{const data=await(await fetchSite(path)).json();check(name,Array.isArray(data[key])&&data[key].length>0,data[key]?.length??0,'Nonempty successful production response');}catch(e){check(name,false,e.message,'Successful production response');}
  }
- const success=Object.entries(conditions).every(([key,value])=>value||Object.values(stages).some(s=>s.status==='NOT EXPECTED'&&key==='weather_current'))&&Object.values(stages).every(s=>['PASS','NOT EXPECTED'].includes(s.status));
+ const success=Object.values(conditions).every(value=>value===true)&&Object.values(stages).every(s=>['PASS','NOT EXPECTED'].includes(s.status));
  const report={checked_at:now.toISOString(),success,conditions,stages,research:research?{season:research.season,week:research.week,model_version:research.model_version,content_hash:hash,frozen:research.frozen,generated_at:research.generated_at,commit_sha:commit.sha}:null};
  await env.DB.prepare("INSERT INTO raw_snapshots(kind,source,source_key,captured_at,payload_json) VALUES ('pipeline_verification','SIGNAL',?,?,?)").bind(hash??'unknown',now.toISOString(),JSON.stringify(report)).run();
  await env.DB.prepare("INSERT INTO sync_state(source,last_attempt_at,last_success_at,status,last_error) VALUES ('pipeline-verification',?,?,?,?) ON CONFLICT(source) DO UPDATE SET last_attempt_at=excluded.last_attempt_at,last_success_at=CASE WHEN excluded.status='healthy' THEN excluded.last_success_at ELSE sync_state.last_success_at END,status=excluded.status,last_error=excluded.last_error").bind(now.toISOString(),success?now.toISOString():null,success?'healthy':'error',success?null:Object.entries(stages).filter(([,v])=>!['PASS','NOT EXPECTED'].includes(v.status)).map(([k,v])=>`${k}: ${v.status}: ${v.actual}`).join('; ').slice(0,2000)).run();
