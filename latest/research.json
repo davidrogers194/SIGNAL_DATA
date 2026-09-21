@@ -1,16 +1,45 @@
 {
   "schema_version": "1.0",
+  "kind": "research",
   "season": 2026,
   "week": 2,
-  "model_version": "handoff-bootstrap-1",
-  "generated_at": "2026-09-21T00:00:00.000Z",
-  "kind": "research",
+  "model_version": "SIGNAL-2.0-pre-market",
+  "generated_at": "2026-09-21T02:01:00Z",
+  "content_hash": "072fe8ecd558e86492e67fe0d86ade3234ee2ae89af56885f7bb66e0aa8238ea",
   "frozen": false,
   "payload": {
-    "title": "Handoff connection test",
-    "dek": "No research or picks published. Waiting for completed Week 2 research.",
-    "games": [],
+    "title": "Week 2 Monday Night Gameflow Journal — Giants at Rams",
+    "dek": "Pre-market football evaluation for New York at Los Angeles. The thesis is intentionally not frozen yet because late Puka Nacua, Deonte Banks, Micah McFadden and Aaron Donald status can materially reshape the matchup before kickoff.",
+    "games": [
+      {
+        "eventId": "NYG-LAR-2026-09-21",
+        "matchup": "New York Giants @ Los Angeles Rams",
+        "headline": "The central question is whether the Giants can sustain methodical offense while Los Angeles attacks a depleted New York secondary.",
+        "thesis": "New York's Week 1 offense showed a credible possession-based identity built on varied personnel, run/pass sequencing and efficient third-down execution, but the Rams present a more disciplined Fangio-adjacent structure with better coverage rotation and interior disruption. Los Angeles enters with a cleaner offensive matchup against a Giants secondary that has lost depth, so the most stable gameflow branch is a competitive first half in which New York tries to shorten the game while the Rams test the edges and intermediate middle. If the Giants fall behind by multiple scores, their methodical run-oriented identity becomes more fragile and Jaxson Dart's pressure recognition becomes a larger variable.",
+        "defensiveWeakness": "The Giants' most important vulnerability is secondary depth. Paulson Adebo is already unavailable and Deonte Banks is questionable, while the Rams can stress replacement corners with Sean McVay's condensed formations, motion and route distribution. On the other side, the Rams lose Myles Garrett and will be without Kamren Kinchens, which reduces some of the defensive ceiling even if Aaron Donald returns.",
+        "offensiveResponse": "Los Angeles should force New York to defend horizontally and through layered intermediate concepts before taking vertical shots, especially if Puka Nacua can play. New York's best counter is to preserve its Week 1 formula: stay ahead of the sticks, use personnel/motion to manipulate box counts, lean on Cam Skattebo and the run game, and give Dart defined throws against coverage rotation rather than obvious long-yardage dropbacks.",
+        "personnelContext": "Rams WR Puka Nacua is questionable after missing Friday and Saturday practice with a hip injury; WR Jordan Whittington is doubtful and S Kamren Kinchens is out. Giants CB Deonte Banks and LB Micah McFadden are questionable. Myles Garrett is unavailable for Los Angeles, while Aaron Donald's expected return would create a major interior stress test for the Giants' line. These late-status items are material enough that this journal should remain unfrozen until Monday updates are verified.",
+        "gameflow": "Base branch: New York attempts to compress possessions with a methodical run/pass mix while Los Angeles probes the weakened secondary. A close first half favors Giants rushing volume and short-area passing. A Rams lead of 10+ points pushes New York toward more dropbacks, raises Dart pressure exposure, and increases Rams pass-rush opportunity. A Puka absence would redistribute Rams targets and widen receiving projections rather than automatically transferring his full volume to one player.",
+        "breaker": "Do not freeze this evaluation until Puka Nacua, Deonte Banks, Micah McFadden and Aaron Donald statuses are verified. A major late offensive-line change, confirmed Nacua absence, or unexpected Giants secondary reinforcement materially changes the expected matchup exposure and should trigger a rerun.",
+        "sources": [
+          {
+            "title": "Reuters — Rams WR Puka Nacua sits out practice again, questionable vs. Giants",
+            "url": "https://www.reuters.com/sports/rams-wr-puka-nacua-sits-out-practice-again-questionable-vs-giants--flm-2026-09-19/",
+            "published_at": "2026-09-19T19:12:00Z"
+          },
+          {
+            "title": "Big Blue View — NY Giants-Rams matchup: Can New York offense keep rolling?",
+            "url": "https://www.bigblueview.com/new-york-giants-analysis/171525/matchup-ny-offense-la-defense-jaxson-dart-cam-skattebo-malik-nabers-aaron-donald",
+            "published_at": "2026-09-18T15:00:00Z"
+          },
+          {
+            "title": "Big Blue View — NY Giants-Rams matchup: Los Angeles offense will provide stern test",
+            "url": "https://www.bigblueview.com/new-york-giants-analysis/171643/matchup-ny-defense-la-offense-matthew-stafford-sean-mcvay-puka-nacua",
+            "published_at": "2026-09-18T17:30:00Z"
+          }
+        ]
+      }
+    ],
     "qualifiedProps": []
-  },
-  "content_hash": "798e5163fbce6e5cc8c23da66849783768f36dc6b9627e787512e5bf344e24a4"
+  }
 }
