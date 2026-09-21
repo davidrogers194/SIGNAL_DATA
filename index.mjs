@@ -1,6 +1,7 @@
 import {validate,jsonSchemas} from './schema.mjs';
+import {verifyPipeline} from './verify.mjs';
 const MAX_BYTES=750000;
-async function github(env,path){
+export async function github(env,path){
  const repo=new URL(env.GITHUB_REPOSITORY_URL);
  if(repo.origin!=='https://github.com'||!/^\/[\w.-]+\/[\w.-]+\/?$/.test(repo.pathname))throw Error('Invalid GITHUB_REPOSITORY_URL');
  const headers={'User-Agent':'SIGNAL-GitHub-Importer','Accept':'application/vnd.github+json'};
@@ -10,7 +11,7 @@ async function github(env,path){
  const reader=r.body.getReader();let size=0;const chunks=[];while(true){const {done,value}=await reader.read();if(done)break;size+=value.byteLength;if(size>MAX_BYTES){await reader.cancel();throw Error('GitHub document exceeds 750 KB');}chunks.push(value);}
  const bytes=new Uint8Array(size);let offset=0;for(const c of chunks){bytes.set(c,offset);offset+=c.length;}return JSON.parse(new TextDecoder().decode(bytes));
 }
-async function document(env,kind,sha){const file=await github(env,'/contents/latest/'+kind+'.json?ref='+sha);if(file.encoding!=='base64'||typeof file.content!=='string')throw Error('Expected a GitHub JSON file');const bytes=Uint8Array.from(atob(file.content.replace(/\s/g,'')),c=>c.charCodeAt(0));return validate(JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes)),kind);}
+export async function document(env,kind,sha){const file=await github(env,'/contents/latest/'+kind+'.json?ref='+sha);if(file.encoding!=='base64'||typeof file.content!=='string')throw Error('Expected a GitHub JSON file');const bytes=Uint8Array.from(atob(file.content.replace(/\s/g,'')),c=>c.charCodeAt(0));return validate(JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes)),kind);}
 const prepare=(env,sql,...args)=>env.DB.prepare(sql).bind(...args);
 export async function runImport(env){
  const now=new Date().toISOString(),lease=crypto.randomUUID();
@@ -26,13 +27,7 @@ export async function runImport(env){
   const writes=[],changed=[];
   for(const p of [research,results]){
    const old=await prepare(env,'SELECT * FROM signal_github_handoff WHERE kind=? AND season=? AND week=?',p.kind,p.season,p.week).first();
-   if(old?.content_hash===p.content_hash){
-    if(p.kind==='research'&&p.payload.games.length){
-     const weekKey=p.season+'-W'+String(p.week).padStart(2,'0'),projection={...p.payload,weekKey,publishedAt:p.generated_at,source:'GitHub research · '+p.model_version,content_hash:p.content_hash,frozen:p.frozen,games:p.payload.games.map(game=>{const picks=p.payload.qualifiedProps.filter(prop=>prop.eventId===game.eventId&&prop.grade!=='Pass').sort((a,b)=>b.score-a.score);const best=picks[0];return {...game,grade:best?.grade??'Research',score:best?.score??null,beneficiaries:[...new Set(picks.map(x=>x.player))],propTypes:[...new Set(picks.map(x=>x.marketKey.replace(/^player_/,'').replaceAll('_',' ')))],sources:game.sources.map(source=>({label:source.title,url:source.url,published_at:source.published_at}))};})};
-     await prepare(env,"INSERT INTO weekly_research(week_key,title,dek,published_at,source,payload_json) VALUES (?,?,?,?,?,?) ON CONFLICT(week_key) DO UPDATE SET title=excluded.title,dek=excluded.dek,published_at=excluded.published_at,source=excluded.source,payload_json=excluded.payload_json",weekKey,p.payload.title,p.payload.dek,p.generated_at,projection.source,JSON.stringify(projection)).run();
-    }
-    continue;
-   }
+   if(old?.content_hash===p.content_hash)continue;
    if(old&&Date.parse(p.generated_at)<=Date.parse(old.generated_at))throw Error(p.kind+': older or conflicting generated_at');
    if(p.kind==='research'&&old?.frozen)throw Error('Research for this week is frozen');
    const payload=JSON.stringify(p),weekKey=p.season+'-W'+String(p.week).padStart(2,'0');let rows=1;
@@ -63,13 +58,14 @@ export default {
   if(request.method==='GET'&&path==='/api/import/status'){
    const state=await prepare(env,"SELECT last_attempt_at,last_success_at,status,record_count AS rows_written,last_error AS error FROM sync_state WHERE source='github-handoff'").first();
    const docs=await prepare(env,'SELECT kind,season,week,content_hash,model_version,generated_at,imported_at AS last_success_at,rows_written,frozen,commit_sha FROM signal_github_handoff ORDER BY imported_at DESC LIMIT 20').all();
-   return Response.json({repository:env.GITHUB_REPOSITORY_URL,branch:env.GITHUB_BRANCH||'main',...state,documents:docs.results},{headers:{'Cache-Control':'no-store'}});
+   const verification=await prepare(env,"SELECT payload_json FROM raw_snapshots WHERE kind='pipeline_verification' ORDER BY id DESC LIMIT 1").first();
+   return Response.json({verification:verification?JSON.parse(verification.payload_json):null,repository:env.GITHUB_REPOSITORY_URL,branch:env.GITHUB_BRANCH||'main',...state,documents:docs.results},{headers:{'Cache-Control':'no-store'}});
   }
   if(request.method==='POST'&&path==='/api/import/run'){
    if(!env.SIGNAL_AUTOMATION_TOKEN||request.headers.get('Authorization')!=='Bearer '+env.SIGNAL_AUTOMATION_TOKEN)return Response.json({error:'Authorized importer token required'},{status:401});
-   const result=await runImport(env);return Response.json(result,{status:result.state==='error'?422:result.state==='busy'?409:200});
+   const result=await runImport(env);const verification=await verifyPipeline(env,{github,document});return Response.json({...result,verification},{status:result.state==='error'?422:result.state==='busy'?409:200});
   }
   return Response.json({error:'Not found'},{status:404});
  },
- async scheduled(_event,env,ctx){ctx.waitUntil(runImport(env).then(result=>{console.log(JSON.stringify({event:'github-handoff',state:result.state}));}));}
+ async scheduled(_event,env,ctx){ctx.waitUntil((async()=>{let result=await runImport(env);if(result.state==='error')result=await runImport(env);const verification=await verifyPipeline(env,{github,document});console.log(JSON.stringify({event:'github-handoff',state:result.state,success:verification.success,conditions:verification.conditions}));})());}
 };

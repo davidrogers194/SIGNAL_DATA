@@ -1,10 +1,7 @@
-import test from 'node:test';import assert from 'node:assert/strict';import {DatabaseSync} from 'node:sqlite';import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';import {validate,hashDocument,jsonSchemas} from './schema.mjs';import {runImport} from './index.mjs';
+import test from 'node:test';import assert from 'node:assert/strict';import {DatabaseSync} from 'node:sqlite';import {readFileSync} from 'node:fs';import {validate,hashDocument,jsonSchemas} from './schema.mjs';import {runImport} from './index.mjs';
 const base={schema_version:'1.0',season:2026,week:2,model_version:'handoff-bootstrap-1',generated_at:'2026-09-21T00:00:00.000Z'};
 const research={...base,kind:'research',frozen:false,payload:{title:'Handoff connection test',dek:'No research or picks published. Waiting for completed Week 2 research.',games:[],qualifiedProps:[]}};research.content_hash=await hashDocument(research);
 const results={...base,kind:'results',research_content_hash:null,payload:{results:[],learning_notes:[]}};results.content_hash=await hashDocument(results);
-for(const dir of ['latest','week/2026-W02','schemas'])mkdirSync(new URL('./'+dir+'/',import.meta.url),{recursive:true});
-for(const p of [research,results])for(const dir of ['latest','week/2026-W02'])writeFileSync(new URL('./'+dir+'/'+p.kind+'.json',import.meta.url),JSON.stringify(p,null,2)+'\n');
-for(const [kind,schema]of Object.entries(jsonSchemas))writeFileSync(new URL('./schemas/'+kind+'.schema.json',import.meta.url),JSON.stringify(schema,null,2)+'\n');
 test('strict schema, canonical hash, future timestamp and outcome validation',async()=>{await validate(research,'research');await assert.rejects(validate({...research,week:3},'research'));await assert.rejects(validate({...research,schema_version:'2'},'research'));await assert.rejects(validate({...research,market_data:{}},'research'));const future={...research,generated_at:'2099-01-01T00:00:00Z'};future.content_hash=await hashDocument(future);await assert.rejects(validate(future,'research'));});
 test('atomic import, repeat no-op, rollback, frozen protection and results isolation',async()=>{
  const db=new DatabaseSync(':memory:');db.exec(`CREATE TABLE sync_state(source TEXT PRIMARY KEY,last_attempt_at TEXT,last_success_at TEXT,next_due_at TEXT,status TEXT,record_count INTEGER DEFAULT 0,last_error TEXT); CREATE TABLE raw_snapshots(id INTEGER PRIMARY KEY,kind TEXT,source TEXT,source_key TEXT,captured_at TEXT,payload_json TEXT); CREATE TABLE market_snapshots(id INTEGER PRIMARY KEY); CREATE TABLE stat_snapshots(id INTEGER PRIMARY KEY,entity_type TEXT,entity_id TEXT,season INTEGER,week INTEGER,source TEXT,captured_at TEXT,payload_json TEXT); CREATE TABLE weekly_research(week_key TEXT PRIMARY KEY,title TEXT,dek TEXT,published_at TEXT,source TEXT,payload_json TEXT);`);
@@ -15,6 +12,16 @@ test('atomic import, repeat no-op, rollback, frozen protection and results isola
   assert.equal((await runImport(env)).state,'imported');assert.equal(db.prepare('SELECT count(*) n FROM signal_github_handoff').get().n,2);assert.equal((await runImport(env)).state,'unchanged');assert.equal(db.prepare('SELECT count(*) n FROM weekly_research').get().n,0);
   docs.research.generated_at='2026-09-21T00:01:00.000Z';docs.research.content_hash=await hashDocument(docs.research);fail=true;assert.equal((await runImport(env)).state,'error');assert.equal(db.prepare("SELECT content_hash FROM signal_github_handoff WHERE kind='research'").get().content_hash,research.content_hash);fail=false;
   db.prepare("UPDATE signal_github_handoff SET frozen=1 WHERE kind='research'").run();assert.match((await runImport(env)).error,/frozen/);assert.equal(db.prepare('SELECT count(*) n FROM market_snapshots').get().n,0);
-  docs.research=structuredClone(research);docs.results.content_hash='0'.repeat(64);assert.match((await runImport(env)).error,/hash/);
+  db.prepare("UPDATE signal_github_handoff SET frozen=0 WHERE kind='research'").run();
+  docs.research={...structuredClone(research),generated_at:'2026-09-21T00:02:00.000Z',frozen:true,payload:JSON.parse(readFileSync(new URL('./latest/research.json',import.meta.url),'utf8')).payload};docs.research.content_hash=await hashDocument(docs.research);
+  assert.equal((await runImport(env)).state,'imported');const frozenProjection=db.prepare('SELECT payload_json FROM weekly_research').get().payload_json;
+  assert.equal((await runImport(env)).state,'unchanged');assert.equal(db.prepare('SELECT payload_json FROM weekly_research').get().payload_json,frozenProjection);
+  docs.results.content_hash='0'.repeat(64);assert.match((await runImport(env)).error,/hash/);
  }finally{globalThis.fetch=original;db.close()}
+});
+
+import {expectedResearchSlot} from './verify.mjs';
+test('Chicago research schedule crosses daylight-saving boundaries',()=>{
+ assert.equal(expectedResearchSlot(new Date('2026-09-21T13:00:00Z')),'2026-09-21T12:00:00.000Z');
+ assert.equal(expectedResearchSlot(new Date('2026-11-02T14:00:00Z')),'2026-11-02T13:00:00.000Z');
 });
