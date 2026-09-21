@@ -26,7 +26,13 @@ export async function runImport(env){
   const writes=[],changed=[];
   for(const p of [research,results]){
    const old=await prepare(env,'SELECT * FROM signal_github_handoff WHERE kind=? AND season=? AND week=?',p.kind,p.season,p.week).first();
-   if(old?.content_hash===p.content_hash)continue;
+   if(old?.content_hash===p.content_hash){
+    if(p.kind==='research'&&p.payload.games.length){
+     const weekKey=p.season+'-W'+String(p.week).padStart(2,'0'),projection={...p.payload,weekKey,publishedAt:p.generated_at,source:'GitHub research · '+p.model_version,content_hash:p.content_hash,frozen:p.frozen,games:p.payload.games.map(game=>{const picks=p.payload.qualifiedProps.filter(prop=>prop.eventId===game.eventId&&prop.grade!=='Pass').sort((a,b)=>b.score-a.score);const best=picks[0];return {...game,grade:best?.grade??'Research',score:best?.score??null,beneficiaries:[...new Set(picks.map(x=>x.player))],propTypes:[...new Set(picks.map(x=>x.marketKey.replace(/^player_/,'').replaceAll('_',' ')))],sources:game.sources.map(source=>({label:source.title,url:source.url,published_at:source.published_at}))};})};
+     await prepare(env,"INSERT INTO weekly_research(week_key,title,dek,published_at,source,payload_json) VALUES (?,?,?,?,?,?) ON CONFLICT(week_key) DO UPDATE SET title=excluded.title,dek=excluded.dek,published_at=excluded.published_at,source=excluded.source,payload_json=excluded.payload_json",weekKey,p.payload.title,p.payload.dek,p.generated_at,projection.source,JSON.stringify(projection)).run();
+    }
+    continue;
+   }
    if(old&&Date.parse(p.generated_at)<=Date.parse(old.generated_at))throw Error(p.kind+': older or conflicting generated_at');
    if(p.kind==='research'&&old?.frozen)throw Error('Research for this week is frozen');
    const payload=JSON.stringify(p),weekKey=p.season+'-W'+String(p.week).padStart(2,'0');let rows=1;
