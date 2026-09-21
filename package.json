@@ -1,0 +1,1 @@
+{"name":"signal-research-importer","private":true,"type":"module","scripts":{"test":"node --test test.mjs","deploy":"wrangler deploy --keep-vars"},"dependencies":{"zod":"^3.25.0"},"devDependencies":{"wrangler":"^4.92.0"}}

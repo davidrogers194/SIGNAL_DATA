@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "season": 2026,
+  "week": 2,
+  "model_version": "handoff-bootstrap-1",
+  "generated_at": "2026-09-21T00:00:00.000Z",
+  "kind": "research",
+  "frozen": false,
+  "payload": {
+    "title": "Handoff connection test",
+    "dek": "No research or picks published. Waiting for completed Week 2 research.",
+    "games": [],
+    "qualifiedProps": []
+  },
+  "content_hash": "798e5163fbce6e5cc8c23da66849783768f36dc6b9627e787512e5bf344e24a4"
+}

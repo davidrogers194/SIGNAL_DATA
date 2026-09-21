@@ -1,0 +1,231 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "season": {
+      "type": "integer",
+      "minimum": 2000,
+      "maximum": 2100
+    },
+    "week": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 22
+    },
+    "model_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+    },
+    "content_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "kind": {
+      "type": "string",
+      "const": "results"
+    },
+    "research_content_hash": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "maxItems": 300,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 6000
+              },
+              "event_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 6000
+              },
+              "player_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 6000
+              },
+              "player": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 6000
+              },
+              "market_key": {
+                "type": "string",
+                "pattern": "^player_.*"
+              },
+              "side": {
+                "type": "string",
+                "enum": [
+                  "OVER",
+                  "UNDER"
+                ]
+              },
+              "line": {
+                "type": "number"
+              },
+              "actual": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "outcome": {
+                "type": "string",
+                "enum": [
+                  "win",
+                  "loss",
+                  "push",
+                  "void",
+                  "pending"
+                ]
+              },
+              "settled_at": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "sources": {
+                "minItems": 1,
+                "maxItems": 20,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 6000
+                    },
+                    "url": {
+                      "type": "string",
+                      "format": "uri",
+                      "pattern": "^https:\\/\\/.*"
+                    },
+                    "published_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "url",
+                    "published_at"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "id",
+              "event_id",
+              "player_id",
+              "player",
+              "market_key",
+              "side",
+              "line",
+              "actual",
+              "outcome",
+              "settled_at",
+              "sources"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "learning_notes": {
+          "maxItems": 50,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 6000
+              },
+              "finding": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 6000
+              },
+              "evidence_result_ids": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 6000
+                }
+              },
+              "methodology": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 6000
+              }
+            },
+            "required": [
+              "id",
+              "finding",
+              "evidence_result_ids",
+              "methodology"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "results",
+        "learning_notes"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "season",
+    "week",
+    "model_version",
+    "generated_at",
+    "content_hash",
+    "kind",
+    "research_content_hash",
+    "payload"
+  ],
+  "additionalProperties": false
+}

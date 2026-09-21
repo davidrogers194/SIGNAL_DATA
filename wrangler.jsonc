@@ -1,0 +1,12 @@
+{
+ "name":"signal-research-importer",
+ "main":"index.mjs",
+ "account_id":"21e6bfe156cfc23339daf4eb198bebfa",
+ "compatibility_date":"2026-09-20",
+ "compatibility_flags":["nodejs_compat"],
+ "workers_dev":true,
+ "vars":{"GITHUB_REPOSITORY_URL":"https://github.com/davidrogers194/SIGNAL_DATA","GITHUB_BRANCH":"main"},
+ "d1_databases":[{"binding":"DB","database_name":"signal","database_id":"0f8e5711-f5e4-4ad8-9dfb-5908819e2d3c"}],
+ "triggers":{"crons":["0 * * * *"]},
+ "observability":{"enabled":true}
+}

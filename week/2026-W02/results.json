@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "season": 2026,
+  "week": 2,
+  "model_version": "handoff-bootstrap-1",
+  "generated_at": "2026-09-21T00:00:00.000Z",
+  "kind": "results",
+  "research_content_hash": null,
+  "payload": {
+    "results": [],
+    "learning_notes": []
+  },
+  "content_hash": "973807a17a5822cf54e4e160125dccb2a64dc174ab5c7acf45b316167457a929"
+}
